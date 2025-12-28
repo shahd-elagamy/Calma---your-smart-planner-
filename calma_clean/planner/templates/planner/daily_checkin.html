@@ -1,0 +1,119 @@
+{% extends 'planner/base.html' %}
+{% load static %}
+
+{% block title %}Calma Daily Check-in{% endblock %}
+
+{% block content %}
+
+<div class="checkin-container">
+
+    <h1>🌿 Calma Daily Check-in</h1>
+    <p>Share your mood and energy for today 💛</p>
+
+<form id="checkin-form" method="post">
+    {% csrf_token %}
+    <!-- Mood Slider -->
+    <div class="slider-container">
+        <label for="mood">Mood</label>
+        <input type="range" id="mood" name="mood" min="1" max="5" value="3">
+        <span id="mood-emoji">😐</span>
+    </div>
+
+    <!-- Energy Slider -->
+    <div class="slider-container">
+        <label for="energy">Energy</label>
+        <input type="range" id="energy" name="energy" min="1" max="10" value="5">
+        <span id="energy-value">5</span>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes-container">
+        <label>Notes (optional)</label>
+        <textarea name="note" rows="4" cols="110"   placeholder="Write anything you’d like to share..."class="slider-container"style="position:center;"></textarea>
+    </div>
+
+    <button type="submit">Save ✅</button>
+</form>
+
+<div class="ai-box" id="ai-box">
+    {% if ai_feedback %}
+        {{ ai_feedback }}
+    {% else %}
+        🤖 Your AI feedback will appear here
+    {% endif %}
+</div>
+
+    <hr>
+
+    <!-- History -->
+    <h2>📊 Last 7 Days Check-ins</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Mood</th>
+            <th>Energy</th>
+            <th>Note</th>
+        </tr>
+        {% for entry in last_entries %}
+        <tr>
+            <td>{{ entry.created_at|date:"Y-m-d" }}</td>
+            <td>{{ entry.mood }}</td>
+            <td>{{ entry.energy }}</td>
+            <td>{{ entry.note|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No check-ins yet.</td></tr>
+        {% endfor %}
+    </table>
+
+    <hr>
+
+    <!-- Chart -->
+    <h2>📈 Mood & Energy Trends</h2>
+    <canvas id="trendChart"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'script.js' %}"></script>
+
+<script>
+const ctx = document.getElementById('trendChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [
+            {% for entry in last_entries reversed %}
+                "{{ entry.created_at|date:'Y-m-d' }}",
+            {% endfor %}
+        ],
+        datasets: [
+            {
+                label: 'Mood',
+                data: [{% for entry in last_entries reversed %}{{ entry.mood }},{% endfor %}],
+                borderColor: '#26a69a',
+                backgroundColor: 'rgba(38,166,154,0.2)',
+                fill: true,
+                tension: 0.4
+            },
+            {
+                label: 'Energy',
+                data: [{% for entry in last_entries reversed %}{{ entry.energy }},{% endfor %}],
+                borderColor: '#ff9800',
+                backgroundColor: 'rgba(255,152,0,0.2)',
+                fill: true,
+                tension: 0.4
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: { beginAtZero: true, max: 10 }
+        }
+    }
+});
+</script>
+
+{% endblock %}

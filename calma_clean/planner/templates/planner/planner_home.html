@@ -1,0 +1,169 @@
+{% extends 'planner/base.html' %}
+{% load static %}
+
+{% block title %}Calma – Home{% endblock %}
+
+{% block content %}
+
+<style>
+/* ===== Calma Home Theme ===== */
+.home-wrapper {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px 20px;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== Hero Section ===== */
+/* ===== Hero Section ===== */
+.hero {
+    background: #ffffff; /* خليت الخلفية أبيض صافي */
+    padding: 50px 30px;
+    border-radius: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+}
+
+body.night-mode .hero {
+    background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+}
+
+/* ===== Logo ===== */
+.hero img {
+    width: 300px;
+    height: 300px;
+    margin-bottom: 0px;
+}
+
+/* ===== Headings ===== */
+.hero h1 {
+    font-size: 42px;
+    color: #6d4c41;
+    margin-bottom: 10px;
+}
+
+body.night-mode .hero h1 {
+    color: #d7ccc8;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #5d4037;
+    max-width: 600px;
+    margin: auto;
+}
+
+body.night-mode .hero p {
+    color: #e0e0e0;
+}
+
+/* ===== Info Cards ===== */
+.home-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.info-card {
+    background: #fff8f0;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+body.night-mode .info-card {
+    background: #2a2a2a;
+}
+
+.info-card h2 {
+    color: #6d4c41;
+    margin-bottom: 10px;
+}
+
+body.night-mode .info-card h2 {
+    color: #d7ccc8;
+}
+
+.info-card p {
+    color: #5d4037;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+body.night-mode .info-card p {
+    color: #ccc;
+}
+
+/* ===== CTA ===== */
+.start-btn {
+    margin-top: 40px;
+    padding: 14px 34px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #bcaaa4, #a1887f);
+    color: white;
+    border: none;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+</style>
+
+<div class="home-wrapper">
+
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+        <img src="{% static 'planner/images/calma_logo.png' %}" alt="Calma Logo">
+
+        <h1>Welcome to Calma 🌿</h1>
+        <p>
+            A calm space to organize your day, focus on your goals,
+            and study with peace and clarity.
+        </p>
+
+        <a href="{% url 'study_planner' %}">
+            <button class="start-btn">Start Planning ✨</button>
+        </a>
+    </section>
+
+    <!-- ===== Info Cards ===== -->
+    <section class="home-info">
+        <div class="info-card">
+            <h2>🗓 Smart Planning</h2>
+            <p>
+                Organize your daily study tasks in a simple,
+                distraction-free environment.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h2>⏱ Focus Timer</h2>
+            <p>
+                Stay focused using a calming timer designed
+                for deep work and productivity.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <h2>🎨 Notes & Creativity</h2>
+            <p>
+                Draw, write, and express your thoughts freely
+                using the built-in canvas.
+            </p>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

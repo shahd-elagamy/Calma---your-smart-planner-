@@ -1,0 +1,272 @@
+/* ================== Global ================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fdf6e3, #f0e6d2);
+    color: #333;
+    margin: 0;
+    padding: 0;
+    transition: background 0.3s ease;
+}
+
+/* Navbar Container */
+
+/* ================= Navbar ================= */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 90px;                 /* 👈 مهم جدًا */
+    background-color: #8d6e63;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;          /* 👈 يمنع التلاصق */
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-sizing: border-box;
+}
+
+/* Left & Right */
+.navbar-left,
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;                    /* 👈 مسافة أفقية واضحة */
+}
+
+/* Buttons */
+.planner-btn {
+    padding: 14px 26px;           /* 👈 مسافة من كل الاتجاهات */
+    border-radius: 16px;
+    background: rgba(255,255,255,0.25);
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    line-height: 1;               /* 👈 يمنع التداخل */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.planner-btn:hover {
+    background: rgba(255,255,255,0.35);
+    transform: translateY(-2px);
+}
+
+/* Language select */
+.language-switcher select {
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+body.night-mode {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+body.night-mode .navbar-left {
+  background-color: #2c2c2c;
+}
+
+body.night-mode .planner-btn {
+  background-color: #444;
+  color: white;
+}
+
+
+/* Content spacing */
+.container {
+    margin-top: 120px;  /* 👈 عشان النافبار */
+}
+
+
+
+
+/* ================== Main Container ================== */
+.container {
+    max-width: 900px;
+    margin: 140px auto 80px auto;
+    padding: 40px 30px;
+    background: #fff8f0;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* ================== Headings ================== */
+h1, h2 {
+    font-family: 'Georgia', serif;
+    color: #6d4c41;
+}
+
+h1 { margin-bottom: 10px; }
+h2 { margin: 40px 0 15px; }
+
+/* ================== Buttons ================== */
+button,
+.planner-btn {
+    background: linear-gradient(145deg, #bcaaa4, #a1887f);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+button:hover,
+.planner-btn:hover {
+    background: linear-gradient(145deg, #a1887f, #bcaaa4);
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ================== Slider Container ================== */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 15px 0;
+    padding: 12px 15px;
+    background-color: #fff8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slider-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.slider-container label {
+    min-width: 70px;
+    font-weight: 600;
+    color: #555;
+}
+
+.slider-container input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 8px;
+    border-radius: 5px;
+    background: #26a69a;
+    outline: none;
+    transition: background 0.3s ease;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ffcc80;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb:hover {
+    background: #ffa726;
+    transform: scale(1.2);
+}
+
+.slider-container span {
+    min-width: 30px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* ================== AI Box ================== */
+.ai-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f1f8e9, #e0f2f1);
+    border-radius: 12px;
+    font-style: italic;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    position: relative;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================== Loader ================== */
+.ai-box .loader {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: url('images/loader.png') no-repeat center center;
+    background-size: contain;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ================== Table ================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+
+th, td {
+    border: none;
+    padding: 14px;
+    text-align: center;
+}
+
+th {
+    background-color: #8d6e63;
+    color: white;
+    font-size: 16px;
+}
+
+tr:nth-child(even) {
+    background-color: #f5efef;
+}
+
+/* ================== Trend Chart ================== */
+canvas {
+    margin-top: 20px;
+    border-radius: 12px;
+    background: #fff8f0;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    padding: 15px;
+}
+
+body.night-mode {
+    background: #1e1e2f;
+    color: #eee;
+}
+
+body.night-mode .container {
+    background: #2c2c3c;
+    color: #eee;
+}
+
+body.night-mode .nav-btn {
+    background: #555;
+    color: #fff;
+}
+
+body.night-mode .nav-btn:hover {
+    background: #777;
+}

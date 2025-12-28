@@ -1,0 +1,477 @@
+{% extends 'planner/base.html' %}
+{% load static %}
+
+{% block title %}Calma Study Planner {% endblock %}
+
+{% block content %}
+
+<style>
+/* ===== General Styles ===== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #fdf6f0;
+    color: #5d4037;
+}
+
+h1, h2 {
+    color: #6d4c41;
+}
+
+/* ===== Form Inputs ===== */
+.add-course-form input[type="text"] {
+    padding: 10px 14px;
+    margin: 5px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    width: 250px;
+    transition: all 0.3s ease;
+}
+
+.add-course-form input[type="text"]:focus {
+    outline: none;
+    border-color: #a1887f;
+    box-shadow: 0 0 8px rgba(161, 136, 127, 0.4);
+}
+
+.add-course-form button {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #bcaaa4, #a1887f);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.add-course-form button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ===== Table ===== */
+#planner-table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+#planner-table th, #planner-table td {
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+#planner-table th {
+    background: #bcaaa4;
+    color: white;
+}
+
+/* ===== Timer Section ===== */
+#timer-section {
+    text-align: center;
+    margin: 40px 0;
+}
+
+#timer-display {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #004d40;
+    background: #e0f2f1;
+    padding: 20px 40px;
+    border-radius: 20px;
+    display: inline-block;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.timer-buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(145deg, #00796b, #004d40);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.timer-buttons button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* ===== To-Do List ===== */
+.todo-input-group input[type="text"] {
+    padding: 10px 14px;
+    width: 250px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.todo-input-group input[type="text"]:focus {
+    outline: none;
+    border-color: #00796b;
+    box-shadow: 0 0 8px rgba(0,121,107,0.4);
+}
+
+.todo-input-group button {
+    padding: 10px 20px;
+    margin-left: 5px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #00796b, #004d40);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.todo-input-group button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+#todo-list li {
+    list-style: none;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background: #e0f2f1;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#todo-list li.completed span {
+    text-decoration: line-through;
+    color: #004d40;
+}
+
+/* ===== Canvas Section ===== */
+#canvas-section {
+    text-align: center;
+    margin: 40px 0;
+}
+
+.canvas-toolbar input[type="color"], .canvas-toolbar input[type="range"] {
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.canvas-toolbar button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(145deg, #bcaaa4, #a1887f);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.canvas-toolbar button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.canvas-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#draw-canvas {
+    border: 2px solid #004d40;
+    border-radius: 12px;
+    background: #ffffff;
+}
+</style>
+
+<h1> Calma Study Planner</h1>
+<p>Organize your study schedule in a smart and structured way 💛</p>
+
+<!-- Form لإضافة مواد جديدة -->
+<div class="add-course-form">
+    <input type="text" id="course-name" placeholder="اسم المادة" class="slider-container" style="margin-left: 320px;">
+    <input type="text" id="course-time" placeholder="وقت الدراسة (مثال: 9-10am)"class="slider-container"style="margin-left: 320px;">
+    <button id="add-course">➕ إضافة مادة</button>
+</div>
+
+<!-- جدول الخطة -->
+<table id="planner-table">
+    <thead>
+        <tr>
+            <th> Subject</th>
+            <th> Study duration</th>
+            <th> Delete</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button id="save-plan">💾 Save </button>
+
+<hr>
+
+<!-- ================= Timer Section ================= -->
+<section id="timer-section">
+    <h2>⏱️ Focus Timer</h2>
+    <div id="timer-display">25:00</div>
+
+    <div class="timer-buttons">
+        <button id="start-timer">▶ Start</button>
+        <button id="pause-timer">⏸ Pause</button>
+        <button id="reset-timer">🔄 Reset</button>
+    </div>
+</section>
+
+<hr>
+
+<section class="todo-section">
+    <h2>✅ To-Do List</h2>
+    <div class="todo-input-group">
+        <input type="text" id="todo-input" placeholder=" Write task">
+        <button id="add-todo">➕ Add task</button>
+    </div>
+    <ul id="todo-list"></ul>
+</section>
+
+<hr>
+
+<!-- Canvas -->
+<section id="canvas-section">
+    <h2>🎨 Deawing & notes canvas  </h2>
+
+    <div class="canvas-toolbar">
+        <label>🎨 Pick color</label>
+        <input type="color" id="color-picker" value="#00796b">
+
+        <label>🖌️ Pen size</label>
+        <input type="range" id="brush-size" min="1" max="20" value="4">
+
+        <button id="zoom-in">➕</button>
+        <button id="zoom-out">➖</button>
+        <button id="save-canvas">💾 Save</button>
+        <button id="clear-canvas">🧹 Delete</button>
+    </div>
+
+    <div class="canvas-wrapper">
+        <canvas id="draw-canvas" width="700" height="350"></canvas>
+    </div>
+</section>
+
+<!-- ================= JS ================= -->
+<script>
+/* ===== Study Planner ===== */
+const addBtn = document.getElementById('add-course');
+const saveBtn = document.getElementById('save-plan');
+const tbody = document.querySelector('#planner-table tbody');
+
+addBtn.addEventListener('click', () => {
+    const name = document.getElementById('course-name').value.trim();
+    const time = document.getElementById('course-time').value.trim();
+    if(name && time){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${name}</td><td>${time}</td><td><button class="delete-btn">❌</button></td>`;
+        tbody.appendChild(tr);
+        document.getElementById('course-name').value = '';
+        document.getElementById('course-time').value = '';
+    }
+});
+
+tbody.addEventListener('click', (e)=>{
+    if(e.target.classList.contains('delete-btn')){
+        e.target.closest('tr').remove();
+    }
+});
+
+saveBtn.addEventListener('click', () => {
+    const plan = [];
+    tbody.querySelectorAll('tr').forEach(row => {
+        const cells = row.querySelectorAll('td');
+        plan.push({course: cells[0].innerText, time: cells[1].innerText});
+    });
+    localStorage.setItem('studyPlan', JSON.stringify(plan));
+    alert('Task saved successfuly 💾');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const saved = JSON.parse(localStorage.getItem('studyPlan') || '[]');
+    saved.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.course}</td><td>${item.time}</td><td><button class="delete-btn">❌</button></td>`;
+        tbody.appendChild(tr);
+    });
+});
+
+/* ================= Timer Logic ================= */
+let time = 25 * 60;
+let timerInterval = null;
+
+const display = document.getElementById('timer-display');
+const startBtn = document.getElementById('start-timer');
+const pauseBtn = document.getElementById('pause-timer');
+const resetBtn = document.getElementById('reset-timer');
+
+function updateDisplay() {
+    const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+    const seconds = (time % 60).toString().padStart(2, '0');
+    display.textContent = `${minutes}:${seconds}`;
+}
+
+startBtn.onclick = () => {
+    if (!timerInterval) {
+        timerInterval = setInterval(() => {
+            if (time > 0) {
+                time--;
+                updateDisplay();
+            } else {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                alert('🧠 Session Finished! Take a break 🌿');
+            }
+        }, 1000);
+    }
+};
+
+pauseBtn.onclick = () => {
+    clearInterval(timerInterval);
+    timerInterval = null;
+};
+
+resetBtn.onclick = () => {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    time = 25 * 60;
+    updateDisplay();
+};
+
+updateDisplay();
+
+/* ===== Advanced To-Do List ===== */
+const todoInput = document.getElementById('todo-input');
+const todoList = document.getElementById('todo-list');
+const addTodoBtn = document.getElementById('add-todo');
+
+let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+
+function renderTodos() {
+    todoList.innerHTML = '';
+    todos.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.className = todo.completed ? 'completed' : '';
+        li.innerHTML = `
+            <label>
+                <input type="checkbox" ${todo.completed ? 'checked' : ''} data-index="${index}" class="toggle-complete">
+                <span>${todo.text}</span>
+            </label>
+            <button class="delete-todo-btn" data-index="${index}">❌</button>
+        `;
+        todoList.appendChild(li);
+    });
+}
+
+addTodoBtn.addEventListener('click', () => {
+    const text = todoInput.value.trim();
+    if (text) {
+        todos.push({ text, completed: false });
+        todoInput.value = '';
+        saveAndRender();
+    }
+});
+
+todoList.addEventListener('change', (e) => {
+    if (e.target.classList.contains('toggle-complete')) {
+        const index = e.target.dataset.index;
+        todos[index].completed = e.target.checked;
+        saveAndRender();
+    }
+});
+
+todoList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('delete-todo-btn')) {
+        const index = e.target.dataset.index;
+        todos.splice(index, 1);
+        saveAndRender();
+    }
+});
+
+function saveAndRender() {
+    localStorage.setItem('todos', JSON.stringify(todos));
+    renderTodos();
+}
+
+renderTodos();
+
+/* ================= Advanced Canvas Drawing ================= */
+const canvas = document.getElementById('draw-canvas');
+const ctx = canvas.getContext('2d');
+
+const colorPicker = document.getElementById('color-picker');
+const brushSize = document.getElementById('brush-size');
+const clearBtn = document.getElementById('clear-canvas');
+
+let painting = false;
+
+canvas.style.cursor = "crosshair";
+
+canvas.addEventListener('mousedown', () => {
+    painting = true;
+    ctx.beginPath();
+});
+
+canvas.addEventListener('mouseup', () => {
+    painting = false;
+    ctx.beginPath();
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!painting) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    ctx.lineWidth = brushSize.value;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = colorPicker.value;
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+});
+
+clearBtn.addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+const zoomInBtn = document.getElementById('zoom-in');
+const zoomOutBtn = document.getElementById('zoom-out');
+const saveBtnCanvas = document.getElementById('save-canvas');
+
+let scale = 1;
+
+zoomInBtn.addEventListener('click', () => {
+    scale += 0.1;
+    canvas.style.transform = `scale(${scale})`;
+});
+
+zoomOutBtn.addEventListener('click', () => {
+    scale = Math.max(0.5, scale - 0.1);
+    canvas.style.transform = `scale(${scale})`;
+});
+
+saveBtnCanvas.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = 'calma-drawing.png';
+    link.href = canvas.toDataURL();
+    link.click();
+});
+</script>
+
+{% endblock %}
